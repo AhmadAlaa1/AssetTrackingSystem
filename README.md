@@ -13,7 +13,7 @@
 - OCL in Documentation
 - AOP in Implementation
 - MicroServices
-- 
+
 <br>
 
 # 🟠 Envirnoment Requirments
