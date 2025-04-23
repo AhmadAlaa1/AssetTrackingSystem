@@ -1,4 +1,4 @@
-# <span style="color:red">Project Requirements</span>
+# 🟠 Project Requirements
 <br>
 
 - Add, edit, and delete assets
@@ -16,7 +16,7 @@
 - 
 <br>
 
-# <span style="color:#b07219">Envirnoment Requirments</span>
+# 🟠 Envirnoment Requirments
 
 <br>
 
