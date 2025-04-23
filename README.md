@@ -1,24 +1,38 @@
+# Assetly
+### The asset tracking system
+This repository is for collaborating on finishing the backend side of the software engineering 2 course project.
+
+<br>
+
 # 🟠 Project Requirements
 <br>
 
-- Add, edit, and delete assets
-- Assign asset to employee
-- Update asset status (Available, In Use, Under Maintenance)
-- View asset history (track changes)
-- Search and filter asset list
+**Asset Manager:**
+
+- Add and delete assets.
+- Add and delete staff members.
+- Update asset status. _(Available, In Use, Under Maintenance)_
+- View asset usage history.
+
+**Staff Member:**
+
+- View all available assets.
+- Mark an asset as being used.
+- Free an asset that's being used to make it available.
+
 <hr>
 
-- SRS (Use Case Diagram , Activity Diagram , Sequence Diagram , Class Diagram , ERD )
-- SDD Documentation (Project Detail Documentaion)
-- OCL in Documentation
-- AOP in Implementation
-- MicroServices
+- UML Diagrams with OCL. ( Use Case Diagram, Activity Diagram, Sequence Diagram, Class Diagram, Entity-Relationship Diagram )
+- Software Requirements Specification Document.
+- Aspect Oriented Programming features.
+- MicroServices.
 
 <br>
 
-# 🟠 Envirnoment Requirments
+# 🟠 Backend Stack
 
 <br>
 
 - Java JDK 24
-- Mariadb
+- Springboot + Spring JPA
+- MariaDB
