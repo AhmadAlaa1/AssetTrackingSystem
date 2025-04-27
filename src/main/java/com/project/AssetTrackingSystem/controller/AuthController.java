@@ -1,7 +1,10 @@
 package com.project.AssetTrackingSystem.controller;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 
 import com.project.AssetTrackingSystem.service.EmployeeService;
@@ -18,25 +21,31 @@ public class AuthController {
     private Employee employee = new Employee(); 
 
     @PostMapping("login")
-    public Employee login(@RequestBody LoginRequest loginRequest){
-        employee=empService.getByEmail(loginRequest.getEmail());
-        if (employee != null && employee.getPassword().equals(loginRequest.getPassword())) {
-            return employee;
-        } else {
-            return null;
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            employee = empService.getByEmail(loginRequest.getEmail());
+            if (employee != null && employee.getPassword().equals(loginRequest.getPassword())) {
+                return new ResponseEntity<>(employee, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (java.lang.Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
     
     @PostMapping("regsiter")
-    public Employee register(@RequestBody RegisterRequest registerRequest){
-        employee.setName(registerRequest.getName());
-        employee.setEmail(registerRequest.getEmail());
-        employee.setPassword(registerRequest.getPassword());
-        employee.setRole(Employee.Role.STAFF);
-        empService.saveEmployee(employee);
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+        try {
+            employee.setName(registerRequest.getName());
+            employee.setEmail(registerRequest.getEmail());
+            employee.setPassword(registerRequest.getPassword());
+            employee.setRole(Employee.Role.STAFF);
+            empService.saveEmployee(employee);
 
-        return employee;
-
+            return new ResponseEntity<>(employee, HttpStatus.OK);
+        } catch (java.lang.Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
