@@ -34,7 +34,7 @@ public class AuthController {
         }
     }
     
-    @PostMapping("/regsiter")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
             employee.setName(registerRequest.getName());

@@ -25,7 +25,7 @@ public class Asset {
     public enum Status {
         AVAILABLE,
         INUSE,
-        MAINTAINCE
+        MAINTENANCE
     }
 
      public Integer getId() {
