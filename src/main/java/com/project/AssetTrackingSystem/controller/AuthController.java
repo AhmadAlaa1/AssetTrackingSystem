@@ -20,7 +20,7 @@ public class AuthController {
     private EmployeeService empService;
     private Employee employee = new Employee(); 
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             employee = empService.getByEmail(loginRequest.getEmail());
@@ -34,7 +34,7 @@ public class AuthController {
         }
     }
     
-    @PostMapping("regsiter")
+    @PostMapping("/regsiter")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
             employee.setName(registerRequest.getName());
