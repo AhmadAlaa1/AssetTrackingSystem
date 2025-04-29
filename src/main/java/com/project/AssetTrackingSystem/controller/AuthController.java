@@ -12,6 +12,7 @@ import com.project.AssetTrackingSystem.dto.LoginRequest;
 import com.project.AssetTrackingSystem.dto.RegisterRequest;
 import com.project.AssetTrackingSystem.model.Employee;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class AuthController {
