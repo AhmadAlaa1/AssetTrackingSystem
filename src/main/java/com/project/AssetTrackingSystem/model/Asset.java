@@ -20,7 +20,7 @@ public class Asset {
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")
-    private Status status;
+    private Status status = Status.AVAILABLE;
 
     public enum Status {
         AVAILABLE,

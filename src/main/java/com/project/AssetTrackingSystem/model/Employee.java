@@ -16,7 +16,7 @@ public class Employee {
     
     @Enumerated(EnumType.STRING)
     @Column(name="role")
-    private Role role;
+    private Role role = Role.STAFF;
     
     @Column(name="email",unique = true)
     private String email;
