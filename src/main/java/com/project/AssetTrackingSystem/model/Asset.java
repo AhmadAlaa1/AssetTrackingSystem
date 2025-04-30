@@ -22,13 +22,16 @@ public class Asset {
     @Column(name="status")
     private Status status = Status.AVAILABLE;
 
+    @Column(name="usedBy")
+    private Integer usedBy = null;
+
     public enum Status {
         AVAILABLE,
         INUSE,
         MAINTENANCE
     }
 
-     public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -67,4 +70,8 @@ public class Asset {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    public Integer getUsedBy() { return usedBy; }
+
+    public void setUsedBy(Integer usedBy) { this.usedBy = usedBy; }
 }
