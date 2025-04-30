@@ -34,8 +34,8 @@ public class AssetController {
     }
 
    @PutMapping("/asset-maintain")
-    public ResponseEntity<?> maintainAsset(@RequestBody MaintainAssetDto dto) {
-        Integer id = dto.getId();
+    public ResponseEntity<?> maintainAsset(@RequestParam("assetID") Integer assetID) {
+        Integer id = assetID;
 
         Asset asset;
         try {

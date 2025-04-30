@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import com.project.AssetTrackingSystem.dto.AssetAssignmentRequest;
-import com.project.AssetTrackingSystem.dto.LeaveAssetDto;
 import com.project.AssetTrackingSystem.model.Asset;
 import com.project.AssetTrackingSystem.model.AssetAssignment;
 import com.project.AssetTrackingSystem.model.Employee;
@@ -31,22 +29,22 @@ public class AssignmentController {
     }
 
     @PostMapping("/assign-asset")
-    public ResponseEntity<?> assignAsset(@RequestBody AssetAssignmentRequest dto) {
+    public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID,@RequestParam("assetID") Integer assetID) {
 
-        Optional<Asset> optionalAsset = assetRepository.findById(dto.getAssetID());
+        Optional<Asset> optionalAsset = assetRepository.findById(assetID);
         if (optionalAsset.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Asset with ID " + dto.getAssetID() + " does not exist.");
+                    .body("Asset with ID " + assetID + " does not exist.");
         }
 
-        boolean isAlreadyAssigned = assignmentService.isAssetAssigned(dto.getAssetID());
+        boolean isAlreadyAssigned = assignmentService.isAssetAssigned(assetID);
         if (isAlreadyAssigned) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Asset is already assigned and not yet returned.");
         }
 
         Employee employee = new Employee();
-        employee.setId(dto.getStaffID());
+        employee.setId(staffID);
 
         AssetAssignment assetAssignment = new AssetAssignment();
         assetAssignment.setEmployee(employee);
@@ -59,8 +57,7 @@ public class AssignmentController {
     }
 
     @PutMapping("/leave-asset")
-    public ResponseEntity<?> leaveAsset(@RequestBody LeaveAssetDto dto) {
-        Integer assetID = dto.getAssetID();
+    public ResponseEntity<?> leaveAsset(@RequestParam("assetID") Integer assetID) {
 
         AssetAssignment assetAssignment;
         try {

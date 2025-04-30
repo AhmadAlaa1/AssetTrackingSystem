@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface AssetAssignmentRepository extends JpaRepository<AssetAssignment,Integer>{
     boolean existsByAssetIdAndReturnDateIsNull(Integer assetId);
-    Optional<AssetAssignment> findByAssetId(Integer assetId);
+    Optional<AssetAssignment> findByAssetIdAndReturnDateIsNull(Integer assetId);
 }

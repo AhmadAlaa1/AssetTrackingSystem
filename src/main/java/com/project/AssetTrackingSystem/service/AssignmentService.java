@@ -2,7 +2,6 @@ package com.project.AssetTrackingSystem.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.AssetTrackingSystem.model.Asset;
 import com.project.AssetTrackingSystem.model.AssetAssignment;
 import com.project.AssetTrackingSystem.repository.AssetAssignmentRepository;
 
@@ -21,7 +20,7 @@ public class AssignmentService {
     }
     
     public AssetAssignment findByAssetId(Integer assetId) {
-        return assetAssignmentRepository.findByAssetId(assetId)
+        return assetAssignmentRepository.findByAssetIdAndReturnDateIsNull(assetId)
             .orElseThrow(() -> new RuntimeException("No assignment found for asset ID " + assetId));
     }
 
