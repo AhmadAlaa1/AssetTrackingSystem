@@ -1,7 +1,9 @@
 package com.project.AssetTrackingSystem.controller;
 
+import com.project.AssetTrackingSystem.dto.MaintainAssetDto;
 import com.project.AssetTrackingSystem.model.Asset;
 import com.project.AssetTrackingSystem.service.AssetService;
+import com.project.AssetTrackingSystem.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,18 +33,26 @@ public class AssetController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @PutMapping("/assign-asset")
-    public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID, @RequestParam("assetID") Integer assetID) {
-        return new ResponseEntity<>(assetService.assignAsset(staffID, assetID), HttpStatus.OK);
+   @PutMapping("/asset-maintain")
+    public ResponseEntity<?> maintainAsset(@RequestBody MaintainAssetDto dto) {
+        Integer id = dto.getId();
+
+        Asset asset;
+        try {
+            asset = assetService.findById(id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("❌ Asset with ID " + id + " not found.");
+        }
+
+        if (asset.getStatus() == Asset.Status.MAINTENANCE) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("⚠️ Asset is already under maintenance.");
+        }
+
+        assetService.maintainAsset(id);
+
+        return new ResponseEntity<>(assetService.findById(id), HttpStatus.OK);
     }
 
-    @PutMapping("/leave-asset")
-    public ResponseEntity<?> leaveAsset(@RequestParam("staffID") Integer staffID, @RequestParam("assetID") Integer assetID) {
-        return new ResponseEntity<>(assetService.leaveAsset(staffID, assetID), HttpStatus.OK);
-    }
-
-    @PutMapping("/maintain-asset")
-    public ResponseEntity<?> maintainAsset(@RequestParam("managerID") Integer managerID, @RequestParam("assetID") Integer assetID) {
-        return new ResponseEntity<>(assetService.maintainAsset(managerID, assetID), HttpStatus.OK);
-    }
 }
