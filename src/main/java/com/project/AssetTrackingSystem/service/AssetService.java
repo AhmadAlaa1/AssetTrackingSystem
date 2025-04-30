@@ -24,18 +24,15 @@ public class AssetService {
         assetRepository.deleteById(id);
     }
 
-    /* ======================= */
-    /* UNIMPLEMENTED FUNCTIONS */
-    /* ======================= */
-    public Asset assignAsset(Integer staffID, Integer assetID) {
-        return new Asset();
+    public Asset findById(Integer id){
+        return assetRepository.findById(id).orElse(null);
     }
 
-    public Asset leaveAsset(Integer staffID, Integer assetID) {
-        return new Asset();
-    }
+    public Asset maintainAsset(Integer assetID) {
+        Asset asset = new Asset();
+        asset=findById(assetID);
+        asset.setStatus(Asset.Status.MAINTENANCE);
+        return assetRepository.save(asset);
 
-    public Asset maintainAsset(Integer staffID, Integer assetID) {
-        return new Asset();
     }
 }
