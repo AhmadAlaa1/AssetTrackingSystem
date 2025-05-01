@@ -2,6 +2,8 @@ package com.project.AssetTrackingSystem.controller;
 
 import java.time.LocalDate;
 
+import com.project.AssetTrackingSystem.repository.EmployeeRepository;
+import com.project.AssetTrackingSystem.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +23,27 @@ public class AssignmentController {
     
     @Autowired
     private AssignmentService assignmentService;
+
+    @Autowired
     private AssetRepository assetRepository;
-     
-    public AssignmentController(AssetRepository assetRepository, AssignmentService assignmentService) {
-        this.assetRepository = assetRepository;
-        this.assignmentService = assignmentService;
-    }
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @PutMapping("/assign-asset")
-    public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID,@RequestParam("assetID") Integer assetID) {
+    public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID, @RequestParam("assetID") Integer assetID) {
 
         Optional<Asset> optionalAsset = assetRepository.findById(assetID);
+        Optional<Employee> optionalEmployee = employeeRepository.findById(staffID);
+
         if (optionalAsset.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Asset with ID " + assetID + " does not exist.");
+        }
+
+        if (optionalEmployee.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Employee with ID " + staffID + " does not exist.");
         }
 
         boolean isAlreadyAssigned = assignmentService.isAssetAssigned(assetID);
@@ -43,12 +52,15 @@ public class AssignmentController {
                     .body("Asset is already assigned and not yet returned.");
         }
 
-        Employee employee = new Employee();
-        employee.setId(staffID);
+        Employee staff =  optionalEmployee.get();
+        Asset asset = optionalAsset.get();
+
+        asset.setUsedBy(staffID);
+        asset.setStatus(Asset.Status.INUSE);
 
         AssetAssignment assetAssignment = new AssetAssignment();
-        assetAssignment.setEmployee(employee);
-        assetAssignment.setAsset(optionalAsset.get());
+        assetAssignment.setEmployee(staff);
+        assetAssignment.setAsset(asset);
         assetAssignment.setAssignedDate(LocalDate.now());
 
         assignmentService.saveAsset(assetAssignment);
@@ -77,6 +89,4 @@ public class AssignmentController {
 
         return new ResponseEntity<>(assetAssignment, HttpStatus.OK);
     }
-
-
 }
