@@ -33,26 +33,24 @@ public class AssetController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-   @PutMapping("/asset-maintain")
+   @PutMapping("/maintain-asset")
     public ResponseEntity<?> maintainAsset(@RequestParam("assetID") Integer assetID) {
-        Integer id = assetID;
-
         Asset asset;
+
         try {
-            asset = assetService.findById(id);
+            asset = assetService.findById(assetID);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("❌ Asset with ID " + id + " not found.");
+                    .body("❌ Asset with ID " + assetID + " not found.");
         }
 
         if (asset.getStatus() == Asset.Status.MAINTENANCE) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("⚠️ Asset is already under maintenance.");
+            return new ResponseEntity<>(assetService.unmaintainAsset(assetID), HttpStatus.OK);
+        }
+        else if (asset.getStatus() == Asset.Status.AVAILABLE) {
+            return new ResponseEntity<>(assetService.maintainAsset(assetID), HttpStatus.OK);
         }
 
-        assetService.maintainAsset(id);
-
-        return new ResponseEntity<>(assetService.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-
 }

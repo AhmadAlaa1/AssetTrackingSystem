@@ -29,9 +29,14 @@ public class AssetService {
     }
 
     public Asset maintainAsset(Integer assetID) {
-        Asset asset = new Asset();
-        asset=findById(assetID);
+        Asset asset = findById(assetID);
         asset.setStatus(Asset.Status.MAINTENANCE);
+        return assetRepository.save(asset);
+    }
+
+    public Asset unmaintainAsset(Integer assetID) {
+        Asset asset = findById(assetID);
+        asset.setStatus(Asset.Status.AVAILABLE);
         return assetRepository.save(asset);
     }
 }
