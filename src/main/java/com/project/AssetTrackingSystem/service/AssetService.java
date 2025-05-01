@@ -33,6 +33,5 @@ public class AssetService {
         asset=findById(assetID);
         asset.setStatus(Asset.Status.MAINTENANCE);
         return assetRepository.save(asset);
-
     }
 }

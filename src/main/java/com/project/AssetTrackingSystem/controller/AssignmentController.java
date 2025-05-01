@@ -28,7 +28,7 @@ public class AssignmentController {
         this.assignmentService = assignmentService;
     }
 
-    @PostMapping("/assign-asset")
+    @PutMapping("/assign-asset")
     public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID,@RequestParam("assetID") Integer assetID) {
 
         Optional<Asset> optionalAsset = assetRepository.findById(assetID);
