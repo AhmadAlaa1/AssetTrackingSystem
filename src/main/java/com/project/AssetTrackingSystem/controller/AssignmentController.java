@@ -30,6 +30,11 @@ public class AssignmentController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @GetMapping("/history")
+    public ResponseEntity<?> getHistory() {
+        return null;
+    }
+
     @PutMapping("/assign-asset")
     public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID, @RequestParam("assetID") Integer assetID) {
 
