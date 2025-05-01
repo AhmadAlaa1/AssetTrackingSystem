@@ -70,23 +70,29 @@ public class AssignmentController {
 
     @PutMapping("/leave-asset")
     public ResponseEntity<?> leaveAsset(@RequestParam("assetID") Integer assetID) {
-
+        Optional<Asset> optionalAsset = assetRepository.findById(assetID);
         AssetAssignment assetAssignment;
+
         try {
             assetAssignment = assignmentService.findByAssetId(assetID);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No active assignment found for asset ID " + assetID);
         }
 
-        if (assetAssignment.getReturnDate() != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("This asset has already been returned.");
+        if (optionalAsset.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("asset " + assetID + " not found.");
         }
+
+        Asset asset = optionalAsset.get();
+
+        asset.setUsedBy(null);
+        asset.setStatus(Asset.Status.AVAILABLE);
 
         assetAssignment.setReturnDate(LocalDate.now());
         assignmentService.saveAsset(assetAssignment);
 
-        return new ResponseEntity<>(assetAssignment, HttpStatus.OK);
+        return new ResponseEntity<>(asset, HttpStatus.OK);
     }
 }
