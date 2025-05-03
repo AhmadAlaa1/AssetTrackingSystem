@@ -16,25 +16,17 @@ public class AssignmentController {
     private AssignmentService assignmentService;
 
     @GetMapping("/history")
-    public ResponseEntity<?> getHistory() {
+    public ResponseEntity<?> getHistory() throws Exception {
         return new ResponseEntity<>(assignmentService.getHistory(), HttpStatus.OK);
     }
 
     @PutMapping("/assign-asset")
-    public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID, @RequestParam("assetID") Integer assetID) {
-        try {
-            return new ResponseEntity<>(assignmentService.assignAsset(assetID, staffID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> assignAsset(@RequestParam("staffID") Integer staffID, @RequestParam("assetID") Integer assetID) throws Exception {
+        return new ResponseEntity<>(assignmentService.assignAsset(assetID, staffID), HttpStatus.OK);
     }
 
     @PutMapping("/leave-asset")
-    public ResponseEntity<?> leaveAsset(@RequestParam("assetID") Integer assetID) {
-        try {
-            return new ResponseEntity<>(assignmentService.leaveAsset(assetID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> leaveAsset(@RequestParam("assetID") Integer assetID) throws Exception {
+        return new ResponseEntity<>(assignmentService.leaveAsset(assetID), HttpStatus.OK);
     }
 }

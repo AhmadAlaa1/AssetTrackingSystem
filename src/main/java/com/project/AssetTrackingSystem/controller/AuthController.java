@@ -21,31 +21,23 @@ public class AuthController {
     private Employee employee = new Employee(); 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            employee = empService.getByEmail(loginRequest.getEmail());
-            if (employee != null && employee.getPassword().equals(loginRequest.getPassword())) {
-                return new ResponseEntity<>(employee, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
-        } catch (java.lang.Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception {
+        employee = empService.getByEmail(loginRequest.getEmail());
+        if (employee != null && employee.getPassword().equals(loginRequest.getPassword())) {
+            return new ResponseEntity<>(employee, HttpStatus.OK);
+        } else {
+            throw new Exception("Incorrect email or password");
         }
     }
     
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
-        try {
-            employee.setName(registerRequest.getName());
-            employee.setEmail(registerRequest.getEmail());
-            employee.setPassword(registerRequest.getPassword());
-            employee.setRole(Employee.Role.STAFF);
-            empService.saveEmployee(employee);
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) throws Exception {
+        employee.setName(registerRequest.getName());
+        employee.setEmail(registerRequest.getEmail());
+        employee.setPassword(registerRequest.getPassword());
+        employee.setRole(Employee.Role.STAFF);
+        empService.saveEmployee(employee);
 
-            return new ResponseEntity<>(employee, HttpStatus.OK);
-        } catch (java.lang.Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 }

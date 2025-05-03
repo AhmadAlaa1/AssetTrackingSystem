@@ -16,27 +16,23 @@ public class AssetController {
     private AssetService assetService;
 
     @GetMapping("/asset")
-    public ResponseEntity<?> getAllAssets() {
+    public ResponseEntity<?> getAllAssets() throws Exception {
         return new ResponseEntity<>(assetService.getAllAssets(), HttpStatus.OK);
     }
 
     @PostMapping("/asset")
-    public ResponseEntity<?> addAsset(@RequestBody Asset newAsset) {
+    public ResponseEntity<?> addAsset(@RequestBody Asset newAsset) throws Exception {
         return new ResponseEntity<>(assetService.addAsset(newAsset), HttpStatus.OK);
     }
 
     @DeleteMapping("/asset/{id}")
-    public ResponseEntity<?> deleteAsset(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteAsset(@PathVariable("id") Integer id) throws Exception {
         assetService.deleteAsset(id);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
    @PutMapping("/maintain-asset")
-    public ResponseEntity<?> maintainAsset(@RequestParam("assetID") Integer assetID) {
-        try {
-            return new ResponseEntity<>(assetService.maintainAsset(assetID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> maintainAsset(@RequestParam("assetID") Integer assetID) throws Exception {
+        return new ResponseEntity<>(assetService.maintainAsset(assetID), HttpStatus.OK);
     }
 }
