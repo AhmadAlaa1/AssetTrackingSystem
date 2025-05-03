@@ -7,6 +7,5 @@ import com.project.AssetTrackingSystem.model.AssetAssignment;
 import java.util.Optional;
 
 public interface AssetAssignmentRepository extends JpaRepository<AssetAssignment,Integer>{
-    boolean existsByAssetIdAndReturnDateIsNull(Integer assetId);
     Optional<AssetAssignment> findByAssetIdAndReturnDateIsNull(Integer assetId);
 }

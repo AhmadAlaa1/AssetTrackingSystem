@@ -1,11 +1,18 @@
 package com.project.AssetTrackingSystem.service;
+
+import com.project.AssetTrackingSystem.model.Asset;
+import com.project.AssetTrackingSystem.model.Employee;
+import com.project.AssetTrackingSystem.repository.AssetRepository;
+import com.project.AssetTrackingSystem.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.AssetTrackingSystem.model.AssetAssignment;
 import com.project.AssetTrackingSystem.repository.AssetAssignmentRepository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssignmentService {
@@ -13,21 +20,68 @@ public class AssignmentService {
     @Autowired    
     private AssetAssignmentRepository assetAssignmentRepository;
 
-    public AssetAssignment saveAsset(AssetAssignment assetAssignmet) {
-     return assetAssignmentRepository.save(assetAssignmet);
-    }
+    @Autowired
+    private AssetRepository assetRepository;
 
-    public boolean isAssetAssigned(Integer id) {
-        return assetAssignmentRepository.existsByAssetIdAndReturnDateIsNull(id);
-    }
-    
-    public AssetAssignment findByAssetId(Integer assetId) {
-        return assetAssignmentRepository.findByAssetIdAndReturnDateIsNull(assetId)
-            .orElseThrow(() -> new RuntimeException("No assignment found for asset ID " + assetId));
-    }
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public List<AssetAssignment> getHistory() {
         return assetAssignmentRepository.findAll();
     }
 
+    public AssetAssignment assignAsset(Integer assetID, Integer staffID) throws Exception {
+        Optional<Asset> optionalAsset = assetRepository.findById(assetID);
+        Optional<Employee> optionalEmployee = employeeRepository.findById(staffID);
+
+        if (optionalAsset.isEmpty()) {
+            throw new Exception("Asset with ID " + assetID + " does not exist.");
+        }
+
+        if (optionalEmployee.isEmpty()) {
+            throw new Exception("Employee with ID " + staffID + " does not exist.");
+        }
+
+        Employee staff =  optionalEmployee.get();
+        Asset asset = optionalAsset.get();
+
+        boolean isAlreadyAssigned = (asset.getUsedBy() != null);
+        if (isAlreadyAssigned) {
+            throw new Exception("Asset is already assigned and not yet returned.");
+        }
+
+        asset.setUsedBy(staffID);
+        asset.setStatus(Asset.Status.INUSE);
+
+        AssetAssignment assetAssignment = new AssetAssignment();
+        assetAssignment.setEmployee(staff);
+        assetAssignment.setAsset(asset);
+        assetAssignment.setAssignedDate(LocalDate.now());
+
+        return assetAssignmentRepository.save(assetAssignment);
+    }
+
+    public Asset leaveAsset(Integer assetID) throws Exception {
+        Optional<Asset> optionalAsset = assetRepository.findById(assetID);
+        Optional<AssetAssignment> optionalAssetAssignment = assetAssignmentRepository.findByAssetIdAndReturnDateIsNull(assetID);
+
+        if (optionalAsset.isEmpty()) {
+            throw new Exception("asset " + assetID + " not found.");
+        }
+
+        if (optionalAssetAssignment.isEmpty()) {
+            throw new Exception("assignment for " + assetID + " not found.");
+        }
+
+        Asset asset = optionalAsset.get();
+        AssetAssignment assignment = optionalAssetAssignment.get();
+
+        asset.setUsedBy(null);
+        asset.setStatus(Asset.Status.AVAILABLE);
+
+        assignment.setReturnDate(LocalDate.now());
+        assetAssignmentRepository.save(assignment);
+
+        return asset;
+    }
 }
