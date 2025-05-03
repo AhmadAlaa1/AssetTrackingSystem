@@ -1,9 +1,7 @@
 package com.project.AssetTrackingSystem.controller;
 
-import com.project.AssetTrackingSystem.dto.MaintainAssetDto;
 import com.project.AssetTrackingSystem.model.Asset;
 import com.project.AssetTrackingSystem.service.AssetService;
-import com.project.AssetTrackingSystem.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,22 +33,10 @@ public class AssetController {
 
    @PutMapping("/maintain-asset")
     public ResponseEntity<?> maintainAsset(@RequestParam("assetID") Integer assetID) {
-        Asset asset;
-
         try {
-            asset = assetService.findById(assetID);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("❌ Asset with ID " + assetID + " not found.");
-        }
-
-        if (asset.getStatus() == Asset.Status.MAINTENANCE) {
-            return new ResponseEntity<>(assetService.unmaintainAsset(assetID), HttpStatus.OK);
-        }
-        else if (asset.getStatus() == Asset.Status.AVAILABLE) {
             return new ResponseEntity<>(assetService.maintainAsset(assetID), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,4 +1,5 @@
 package com.project.AssetTrackingSystem.service;
+
 import com.project.AssetTrackingSystem.model.Asset;
 import com.project.AssetTrackingSystem.repository.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,32 @@ public class AssetService {
         return assetRepository.findById(id).orElse(null);
     }
 
-    public Asset maintainAsset(Integer assetID) {
+    private Asset putInMaintenance(Integer assetID) {
         Asset asset = findById(assetID);
         asset.setStatus(Asset.Status.MAINTENANCE);
         return assetRepository.save(asset);
     }
 
-    public Asset unmaintainAsset(Integer assetID) {
+    private Asset putOutOfMaintenance(Integer assetID) {
         Asset asset = findById(assetID);
         asset.setStatus(Asset.Status.AVAILABLE);
         return assetRepository.save(asset);
+    }
+
+    public Asset maintainAsset(Integer assetID) throws Exception {
+        Asset asset = findById(assetID);
+
+        if (asset == null) throw new Exception("Asset not found");
+
+        switch (asset.getStatus()) {
+            case Asset.Status.MAINTENANCE:
+                return putOutOfMaintenance(assetID);
+            case Asset.Status.AVAILABLE:
+                return putInMaintenance(assetID);
+            case Asset.Status.INUSE:
+                throw new Exception("Asset is in use");
+            default:
+                return null;
+        }
     }
 }
