@@ -32,7 +32,7 @@ public class AssignmentController {
 
     @GetMapping("/history")
     public ResponseEntity<?> getHistory() {
-        return null;
+        return new ResponseEntity<>(assignmentService.getHistory(), HttpStatus.OK);
     }
 
     @PutMapping("/assign-asset")

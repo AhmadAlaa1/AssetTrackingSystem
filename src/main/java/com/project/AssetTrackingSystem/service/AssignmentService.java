@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.project.AssetTrackingSystem.model.AssetAssignment;
 import com.project.AssetTrackingSystem.repository.AssetAssignmentRepository;
 
+import java.util.List;
+
 @Service
 public class AssignmentService {
 
@@ -22,6 +24,10 @@ public class AssignmentService {
     public AssetAssignment findByAssetId(Integer assetId) {
         return assetAssignmentRepository.findByAssetIdAndReturnDateIsNull(assetId)
             .orElseThrow(() -> new RuntimeException("No assignment found for asset ID " + assetId));
+    }
+
+    public List<AssetAssignment> getHistory() {
+        return assetAssignmentRepository.findAll();
     }
 
 }
